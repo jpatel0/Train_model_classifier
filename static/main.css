@@ -1,0 +1,51 @@
+body{
+    margin: 0 auto;
+    background: rgb(114, 166, 245);
+    color: white;
+    text-align: center;
+}
+.container{
+    margin: 0 auto;
+    margin-top: 50px;
+}
+
+ul, li {
+    display: block;
+    margin: 5px auto;
+    width: auto;
+}
+.container input,button{
+    display: block;
+    width: auto;
+    padding: 15px;
+    border: None;
+    border-radius: 5px;
+    margin: 10px auto;
+    background: black;
+    color: white;
+}
+.wh_btn {
+    width: 200px;
+    height: 100px;
+}
+button {
+    width: auto;
+    height: auto;
+    display: block;
+    padding: 20px;
+    margin: 10px auto;
+    color: white;
+    
+    background: black;
+    text-align: center;
+}
+button:hover {
+    color: black;
+    background: white;
+}
+
+table{
+    margin: 0 auto;
+    text-align: center;
+}
+

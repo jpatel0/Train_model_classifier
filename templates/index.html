@@ -1,0 +1,37 @@
+{% extends "layout.html"%}
+{%block content%}
+    <div class="container">
+        <h1>Train your binary classifier here</h1>
+        <h4>Steps for uploading the required files:</h4>
+        <ul>
+            <li>Folder and files directory structure:</li>
+            <li>dataset</li>
+            <ul>
+                <li>train</li>
+                <ul>
+                    <li>class1</li>
+                    <ul>
+                        <li>1.jpg</li>
+                        <li>2.jpg</li>
+                    </ul>
+                </ul>
+                
+                <li>validation</li>
+                <ul>
+                    <li>class1</li>
+                    <ul>
+                        <li>1.jpg</li>
+                        <li>2.jpg</li>
+                    </ul>
+                </ul>
+            </ul>
+            <li>Prepare a single zip file of the above strucuted folders</li>
+            <li>Upload the zip file</li> 
+        </ul>
+        <form action="{{url_for('upload')}}" method="GET">
+            <button class="wh_btn" type="submit">Upload zip file</button>
+        </form>
+        </form>
+    </div>
+
+{%endblock%}

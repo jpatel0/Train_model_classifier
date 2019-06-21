@@ -1,0 +1,10 @@
+.ipynb_checkpoints/*
+pred/*
+train/*
+validation/*
+cats_and_dogs_filtered.zip
+transfer_learning.ipynb
+Untitled.ipynb
+Untitled1.ipynb
+/static/upfolders/*
+*.env

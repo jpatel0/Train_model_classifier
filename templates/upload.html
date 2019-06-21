@@ -1,0 +1,12 @@
+{%extends "layout.html"%}
+{%block content%}
+<div class="container">
+    <h1>Upload the Zip file</h1>
+    <form action="{{ url_for('test')}}" method="POST" enctype="multipart/form-data">
+        <input type="file" name="zipfile" accept=".zip,.rar,.7zip"><br>
+        <button type="submit" name="upload_file">Upload File</button>
+
+    </form>
+    {%include btn ignore missing%}
+</div>
+{%endblock%}
