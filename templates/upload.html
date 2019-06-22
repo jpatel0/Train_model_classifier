@@ -2,11 +2,33 @@
 {%block content%}
 <div class="container">
     <h1>Upload the Zip file</h1>
-    <form action="{{ url_for('test')}}" method="POST" enctype="multipart/form-data">
+    <form id="upload-file" action="" method="POST" enctype="multipart/form-data">
         <input type="file" name="zipfile" accept=".zip,.rar,.7zip"><br>
-        <button type="submit" name="upload_file">Upload File</button>
-
+        <button type="submit" id="upload_file">Upload File</button>
     </form>
+
+
+    <script>
+        $(document).ready(function() {
+            $("#upload_file" ).click(function(event) {
+                event.preventDefault();
+                var form_data = new FormData($('#upload-file')[0]);
+                $.ajax({
+                    type: 'POST',
+                    url: "{{ url_for('uploadFile') }}",
+                    data: form_data,
+                    contentType: false,
+                    cache: false,
+                    processData: false,
+                    success: function(data) {
+                        if(data.redirect == true){
+                            window.location.href = data.redirectLink;
+                        }
+                    },
+                });
+            });
+        });
+    </script>
     {%include btn ignore missing%}
 </div>
 {%endblock%}

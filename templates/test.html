@@ -1,8 +1,22 @@
 {%extends "layout.html"%}
 {%block content%}
 <div class="container">
+    
+    <div id="train_progress">
+        
+    </div>
 
-    <h1>{{prediction}}</h1>
-    <img src="{{filepath}}" alt="">
+
+    <script>
+        $.ajax({
+            type : "GET",
+            url : "{{ url_for('trainProgress') }}",
+            success: function(result) {
+                console.log(result);
+                var log = result.Progress;
+                $('#train_progress').append(log);
+            }
+        });
+    </script>
 </div>
 {%endblock%}
