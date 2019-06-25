@@ -2,8 +2,13 @@
 {%block content%}
 <div class="container">
     
+    <form action="" method="post" name="params">
+            Epochs: <input type="number" placeholder="01" name='epochs'>
+            Learning Rate: <input type="text" name="lr" placeholder="0.001"> 
+            <button id="start_train-btn" class="wh_btn" type="submit">Start Training the Model</button>
+    </form>
+
     <div id="train_logs">
-        <button id="start_train-btn" class="wh_btn">Start Training the Model</a>
     </div>
 
 
@@ -12,25 +17,36 @@
 
             var interval = setInterval(()=>{
                 $.ajax({
-                type: 'GET',
-                url: "{{url_for('trainProgress')}}",
-                success: function(data) {
-                    console.log(data.Progress)
-                    if(data.Progress){
-                        if($('.log').last().text() != data.Progress)
-                            $('#train_logs').append("<p class=\"log\">"+data.Progress+"</p>")
-                    }
-                },
-            });
-            },3500);
+                    type: 'GET',
+                    url: "{{url_for('trainProgress')}}",
+                    success: function(data) {
+                        console.log(data.Progress)
+                        console.log($('.log').last().text())
+                        if(data.Progress){
+                            
+                            if($('.log').last().text() != data.Progress){
+                                
+                                $('#train_logs').append("<p class=\"log\">"+data.Progress+"</p>");
+                            }          
+                        }
+                    },
+                });
+            },1500);
 
             $("#start_train-btn" ).click(function(event) { 
                 event.preventDefault();
-                $('#start_train-btn').remove();
+                $('form[name=params]').remove();
                 var arr = window.location.href.split('/');
                 var fd = arr[arr.length - 1];
-                console.log(fd);
-                d= {"folder":fd};
+                if($("input[name=lr]").val())
+                    var lr = $("input[name=lr]").val();
+                else
+                    var lr = 0.001
+                if($("input[name=epochs]").val())
+                    var epochs = $("input[name=epochs]").val()
+                else
+                    var epochs = 1
+                d= {"folder":fd, "lr": lr, "epochs":epochs};
                 $.ajax({
                     type: 'POST',
                     url: "{{url_for('train_model')}}",

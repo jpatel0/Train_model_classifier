@@ -65,6 +65,8 @@ def train_model():
 
     global log
     print(request.json['folder'])
+    print(request.json['lr'])
+    print(request.json['epochs'])
     folder_name = request.json['folder']
     log = r"Initializing variables...."
     gc.enable()
@@ -73,6 +75,16 @@ def train_model():
     validation_dir = os.path.join(base_dir, 'validation')
     image_size = 160
     batch_size = 32
+
+    if(request.json['epochs']):
+        epochs = int(request.json['epochs'])
+    else:
+        epochs = 1
+    if(request.json['lr']):
+        lr = int(request.json['lr'])
+    else:
+        lr = 0.001
+
 
     train_datagen = keras.preprocessing.image.ImageDataGenerator(
                     rescale=1./255)
@@ -91,6 +103,7 @@ def train_model():
                     batch_size=batch_size,
                     class_mode='sparse')
     IMG_SHAPE = (image_size, image_size, 3)
+    log = r'Creating Model Base to Train'
     base_model = keras.applications.MobileNetV2(input_shape=IMG_SHAPE,
                                                include_top=False,
                                                weights='imagenet',classes=2)
@@ -98,10 +111,11 @@ def train_model():
     model = keras.Sequential([base_model,
                             keras.layers.GlobalAveragePooling2D(),
                             keras.layers.Dense(2,activation='sigmoid')])
-    model.compile(optimizer=keras.optimizers.RMSprop(lr=0.0001),
+    log = r'Compiling the Model'
+    model.compile(optimizer=keras.optimizers.RMSprop(lr=lr),
               loss='sparse_categorical_crossentropy',
               metrics=['accuracy'])
-    epochs = 1
+    
     steps_per_epoch = train_generator.n // batch_size
     validation_steps = validation_generator.n // batch_size
     print("training started")
@@ -113,19 +127,20 @@ def train_model():
                                 validation_data=validation_generator,
                                 validation_steps=validation_steps)
 
+
+    log =  r"Dense Layer's Trainig done..."
     fine_tune_at = 100
-    log =  r"Dense Layer's Trainig done:."
 
     # Freeze all the layers before the `fine_tune_at` layer
     for layer in base_model.layers[:fine_tune_at]:
         layer.trainable =  False
 
-    model.compile(optimizer = tf.keras.optimizers.RMSprop(lr=2e-5),
+    model.compile(optimizer = tf.keras.optimizers.RMSprop(lr=2e-4),
               loss='sparse_categorical_crossentropy',
               metrics=['accuracy'])
 
     
-    log = log + r'Fine Tuning the model, beginning to train.'
+    log = r'Fine Tuning the model, beginning to train.'
     hist = model.fit_generator(train_generator,
                                    steps_per_epoch = steps_per_epoch,
                                    epochs=epochs,
@@ -161,14 +176,16 @@ def uploadFile():
     zip.extractall(path=app.config['UPLOAD_FOLDER'])
     zip.close()
     os.remove(filepath)
-    folder_name = os.path.splitext(filepath)[0]
-    return jsonify({"redirect":True,
-                    "redirectLink":"./start/"+os.path.splitext(file.filename)[0]})
-
+    # folder_name = os.path.splitext(filepath)[0]
+    # return jsonify({"redirect":True,
+    #                 "redirectLink":"./start/"+os.path.splitext(file.filename)[0]})
+    return redirect(url_for('startTrain',folder_name = os.path.splitext(file.filename)[0]))
 
 @app.route('/start/<folder_name>')
 def startTrain(folder_name):
     # path = train_model(os.path.join(app.config['UPLOAD_FOLDER'],folder_name))
+    global log
+    log = ""
     return render_template('startTrain.html')
     
 
